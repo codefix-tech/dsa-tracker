@@ -16,6 +16,7 @@ function App() {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<number>(0);
 
+  // ✅ GET API
   useEffect(() => {
     fetch("http://localhost:8080/api/problems")
       .then((res) => res.json())
@@ -27,11 +28,19 @@ function App() {
       .catch((err) => console.error(err));
   }, []);
 
+  // ✅ PUT API
   const toggleDone = (index: number) => {
-    const updated = [...topics];
-    updated[selectedTopic].problems[index].done =
-      !updated[selectedTopic].problems[index].done;
-    setTopics(updated);
+    fetch(
+      `http://localhost:8080/api/problems/${selectedTopic}/${index}`,
+      {
+        method: "PUT",
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setTopics(data);
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
